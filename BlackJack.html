@@ -1,0 +1,474 @@
+<document HTML>
+
+  <head>
+    <style>
+      h1 {
+        text-shadow: 2px 3px red;
+        font-size: 50px;
+        text-align: center;
+      }
+
+      p {
+        font-size: 20px
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <h1>Black Jack
+    </h1>
+    <div id="startAreaOne">
+      Welcome! Please enter your name:
+      <input type="text" id="playerName">
+      <button type="button" id="submitButton">Submit</button>
+    </div>
+    <div id="startAreaTwo" style="display:none">
+      <p id="startAreaTwoP">
+
+      </p>
+      <button type="button" id="playButton">Play</button>
+    </div>
+    <div id="playerOneStatsArea" style="display:none">
+      <span id="playerOneName"></span>
+      <span id="playerOneMoney"></span>
+      <button id="hitButton" type="button">Hit</button> or
+      <button id="standButton" type="button">Stand</button>
+      <span id="playerOneResults"></span>
+
+    </div>
+
+    <div id="playerOneCardArea" style="display:none">
+      <img id="playerOneCardOne" style="width:100px;height:200px;" src="">
+      <img id="playerOneCardTwo" style="width:100px;height:200px;" src="">
+      <img id="playerOneCardThree" style="width:100px;height:200px;display:none" src="">
+      <img id="playerOneCardFour" style="width:100px;height:200px;display:none" src="">
+      <img id="playerOneCardFive" style="width:100px;height:200px;display:none" src="">
+      <img id="playerOneCardSix" style="width:100px;height:200px;display:none" src="">
+
+    </div>
+    <div id="roundResultArea" style="color:red;text-align:center;font-size:40px;display:none">
+      <p id="roundResultAreaP"></p>
+    </div>
+    <div id="playAgainButton" style="display:none;text-align:center">
+      <button type="button">Play Again?
+			</button>
+    </div>
+
+    <div id="dealerStatsArea" style="display:none">
+      Dealer:
+      <button id="startDealerTurn" type="button">Start Dealer's Turn</button>
+      <span id="dealerResults"></span>
+    </div>
+    <div id="dealerCardArea" style="display:none">
+      <img id="dealerCardOne" style="width:100px;height:200px;" src="">
+      <img id="dealerCardTwo" style="width:100px;height:200px;" src="">
+      <img id="dealerCardThree" style="width:100px;height:200px;display:none" src="">
+      <img id="dealerCardFour" style="width:100px;height:200px;display:none" src="">
+      <img id="dealerCardFive" style="width:100px;height:200px;display:none" src="">
+      <img id="dealerCardSix" style="width:100px;height:200px;display:none" src="">
+    </div>
+    <div id="newGameButton" style="text-align:center;display:none">
+      <br>
+      <button type="button">New Game</button>
+    </div>
+
+
+    <script>
+      var cardImageDict = {
+        twohearts: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/02_of_hearts.svg/208px-02_of_hearts.svg.png",
+        twodiamonds: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/02_of_diamonds.svg/208px-02_of_diamonds.svg.png",
+        twoclubs: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/02_of_clubs.svg/208px-02_of_clubs.svg.png",
+        twospades: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/02_of_spades.svg/208px-02_of_spades.svg.png",
+        threehearts: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/03_of_hearts.svg/208px-03_of_hearts.svg.png",
+        threediamonds: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/03_of_diamonds.svg/208px-03_of_diamonds.svg.png",
+        threeclubs: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/03_of_clubs.svg/208px-03_of_clubs.svg.png",
+        threespades: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/03_of_spades.svg/208px-03_of_spades.svg.png",
+        fourhearts: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/04_of_hearts.svg/208px-04_of_hearts.svg.png",
+        fourdiamonds: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/04_of_diamonds.svg/208px-04_of_diamonds.svg.png",
+        fourclubs: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/04_of_clubs.svg/208px-04_of_clubs.svg.png",
+        fourspades: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/04_of_spades.svg/208px-04_of_spades.svg.png",
+        fivehearts: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/05_of_hearts.svg/208px-05_of_hearts.svg.png",
+        fivediamonds: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/05_of_diamonds.svg/208px-05_of_diamonds.svg.png",
+        fiveclubs: "https://openclipart.org/image/2400px/svg_to_png/192924/1397958311.png",
+        fivespades: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/05_of_spades.svg/208px-05_of_spades.svg.png",
+        sixhearts: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/06_of_hearts.svg/208px-06_of_hearts.svg.png",
+        sixdiamonds: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/06_of_diamonds.svg/208px-06_of_diamonds.svg.png",
+        sixclubs: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/06_of_clubs.svg/208px-06_of_clubs.svg.png",
+        sixspades: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/06_of_spades.svg/208px-06_of_spades.svg.png",
+        sevenhearts: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/07_of_hearts.svg/208px-07_of_hearts.svg.png",
+        sevendiamonds: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/07_of_diamonds.svg/208px-07_of_diamonds.svg.png",
+        sevenclubs: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/07_of_clubs.svg/208px-07_of_clubs.svg.png",
+        sevenspades: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/07_of_spades.svg/208px-07_of_spades.svg.png",
+        eighthearts: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/08_of_hearts.svg/208px-08_of_hearts.svg.png",
+        eightdiamonds: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/08_of_diamonds.svg/208px-08_of_diamonds.svg.png",
+        eightclubs: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/08_of_clubs.svg/208px-08_of_clubs.svg.png",
+        eightspades: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/08_of_spades.svg/208px-08_of_spades.svg.png",
+        ninehearts: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/09_of_hearts.svg/208px-09_of_hearts.svg.png",
+        ninediamonds: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/09_of_diamonds.svg/208px-09_of_diamonds.svg.png",
+        nineclubs: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/09_of_clubs.svg/208px-09_of_clubs.svg.png",
+        ninespades: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/09_of_spades.svg/208px-09_of_spades.svg.png",
+        tenhearts: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/10_of_hearts_-_David_Bellot.svg/208px-10_of_hearts_-_David_Bellot.svg.png",
+        tendiamonds: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/10_of_diamonds_-_David_Bellot.svg/208px-10_of_diamonds_-_David_Bellot.svg.png",
+        tenclubs: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/10_of_clubs_-_David_Bellot.svg/208px-10_of_clubs_-_David_Bellot.svg.png",
+        tenspades: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/10_of_spades_-_David_Bellot.svg/208px-10_of_spades_-_David_Bellot.svg.png",
+        jackhearts: "https://pre00.deviantart.net/726b/th/pre/i/2017/026/1/c/my_playing_cards_v2___jack_of_hearts_by_gabe0530-dawrusi.png",
+        jackdiamonds: "https://previews.123rf.com/images/henningmarquardt/henningmarquardt1703/henningmarquardt170300276/74712993-large-index-playing-card-jack-of-diamonds.jpg",
+        jackclubs: "https://pre00.deviantart.net/e0a1/th/pre/i/2017/026/6/1/my_playing_cards_v2___jack_of_clubs_by_gabe0530-dawruvv.png",
+        jackspades: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Poker-sm-214-Js.png",
+        queenhearts: "https://techflourish.com/images/queen-of-hearts-playing-card-clipart-12.jpg",
+        queendiamonds: "https://vignette.wikia.nocookie.net/uncyclopedia/images/6/65/Queen_of_diamonds.png/revision/latest?cb=20111109083633",
+        queenclubs: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6gerHylwUTLLQy6KFh6ftpWfh1bJHW5B7Q8hpqtV0n3AKZItpSg",
+        queenspades: "https://lifeofhimm.files.wordpress.com/2015/02/queen-of-spades.jpg",
+        kinghearts: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/English_pattern_king_of_hearts.svg/2000px-English_pattern_king_of_hearts.svg.png",
+        kingdiamonds: "https://upload.wikimedia.org/wikipedia/commons/d/d0/Poker-sm-232-Kd.png",
+        kingclubs: "https://previews.123rf.com/images/hugolacasse/hugolacasse1511/hugolacasse151100013/48415794-king-of-clubs-original-design.jpg",
+        kingspades: "https://i.pinimg.com/originals/ab/c2/0f/abc20fa5541461088f90ceeb76167eca.png",
+        acehearts: "https://cs.nyu.edu/courses/spring13/CSCI-UA.0061-001/newcards/images/Ace%20of%20Hearts%201.jpg",
+        acediamonds: "https://cs.nyu.edu/courses/spring13/CSCI-UA.0061-001/newcards/images/Ace%20of%20Diamonds.jpg",
+        aceclubs: "https://cs.nyu.edu/courses/spring13/CSCI-UA.0061-001/newcards/images/Ace%20of%20Clubs.jpg",
+        acespades: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Ace_of_spades.svg/2000px-Ace_of_spades.svg.png"
+
+      };
+
+      var cardRank = ["two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king", "ace"];
+      var cardSuit = ["hearts", "diamonds", "clubs", "spades"];
+      var cardValue = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11];
+
+      var deck = [];
+      for (i = 0; i < cardRank.length; i++) {
+        for (j = 0; j < cardSuit.length; j++) {
+          var card = {
+            rank: cardRank[i],
+            suit: cardSuit[j],
+            value: cardValue[i],
+            image: cardRank[i] + cardSuit[j]
+          };
+          deck.push(card);
+        }
+      }
+      var card1;
+      var card2;
+      var randomIndex;
+      var temp;
+
+
+
+      function Shuffle() {
+        for (i = 0; i < deck.length; i++) {
+          randomIndex = Math.floor(Math.random() * 52);
+          card1 = deck[i];
+          card2 = deck[randomIndex];
+          deck[i] = card2;
+          deck[randomIndex] = card1;
+        }
+      }
+      Shuffle();
+
+      function printDeck() {
+        for (i = 0; i < deck.length; i++) {
+          console.log(deck[i]);
+        }
+      }
+      //printDeck();
+      var playerOne = {
+        hand: [],
+        score: 0,
+        money: 10
+      };
+      var dealer = {
+        hand: [],
+        score: 0
+      };
+      var currentIndex = 0;
+      var players = [playerOne, dealer];
+
+
+      function printCards(input) {
+        for (i = 0; i < input.hand.length; i++) {
+          console.log(input.hand[i]);
+        }
+      }
+
+
+      function Deal() {
+        for (i = 0; i < players.length; i++) {
+          for (j = 0; j < 2; j++) {
+            players[i].hand.push(deck[currentIndex]);
+            currentIndex++;
+          }
+
+        }
+      }
+      Deal();
+
+      function Hit() {
+        playerOne.hand.push(deck[currentIndex]);
+        currentIndex++;
+      }
+
+      function Score() {
+        playerOne.score = 0;
+        dealer.score = 0;
+        for (i = 0; i < playerOne.hand.length; i++) {
+          playerOne.score += playerOne.hand[i].value;
+        }
+        if (playerOne.score > 21) {
+          for (i = 0; i < playerOne.hand.length; i++) {
+            if (playerOne.hand[i].rank == "ace") {
+              playerOne.hand[i].value = 1;
+            }
+
+          }
+        }
+        playerOne.score = 0;
+        for (i = 0; i < playerOne.hand.length; i++) {
+          playerOne.score += playerOne.hand[i].value;
+        }
+
+        for (i = 0; i < dealer.hand.length; i++) {
+          dealer.score += dealer.hand[i].value;
+        }
+        if (dealer.score > 21) {
+          for (i = 0; i < dealer.hand.length; i++) {
+            if (dealer.hand[i].rank == "ace") {
+              dealer.hand[i].value = 1;
+            }
+          }
+        }
+        dealer.score = 0;
+        for (i = 0; i < dealer.hand.length; i++) {
+          dealer.score += dealer.hand[i].value;
+        }
+      }
+
+      LoadAll();
+
+      function LoadAll() {
+        if (playerOne.hand[0]) {
+          document.getElementById("playerOneCardOne").src = cardImageDict[playerOne.hand[0].image];
+          document.getElementById("playerOneCardOne").style.display = "inline";
+        } else {
+          document.getElementById("playerOneCardOne").style.display = "none";
+        }
+        if (playerOne.hand[1]) {
+          document.getElementById("playerOneCardTwo").src = cardImageDict[playerOne.hand[1].image];
+          document.getElementById("playerOneCardTwo").style.display = "inline";
+        } else {
+          document.getElementById("playerOneCardTwo").style.display = "none";
+        }
+        if (playerOne.hand[2]) {
+          document.getElementById("playerOneCardThree").src = cardImageDict[playerOne.hand[2].image];
+          document.getElementById("playerOneCardThree").style.display = "inline";
+        } else {
+          document.getElementById("playerOneCardThree").style.display = "none";
+        }
+        if (playerOne.hand[3]) {
+          document.getElementById("playerOneCardFour").src = cardImageDict[playerOne.hand[3].image];
+          document.getElementById("playerOneCardFour").style.display = "inline";
+        } else {
+          document.getElementById("playerOneCardFour").style.display = "none";
+        }
+        if (playerOne.hand[4]) {
+          document.getElementById("playerOneCardFive").src = cardImageDict[playerOne.hand[4].image];
+          document.getElementById("playerOneCardFive").style.display = "inline";
+        } else {
+          document.getElementById("playerOneCardFive").style.display = "none";
+        }
+        if (playerOne.hand[5]) {
+          document.getElementById("playerOneCardSix").src = cardImageDict[playerOne.hand[5].image];
+          document.getElementById("playerOneCardSix").style.display = "inline";
+        } else {
+          document.getElementById("playerOneCardSix").style.display = "none";
+        }
+        if (dealer.hand[0]) {
+          document.getElementById("dealerCardOne").src = cardImageDict[dealer.hand[0].image];
+          document.getElementById("dealerCardOne").style.display = "inline";
+        } else {
+          document.getElementById("dealerCardOne").style.display = "none";
+        }
+        if (dealer.hand[1]) {
+          document.getElementById("dealerCardTwo").src = cardImageDict[dealer.hand[1].image];
+          document.getElementById("dealerCardTwo").style.display = "inline";
+        } else {
+          document.getElementById("dealerCardTwo").style.display = "none";
+        }
+        if (dealer.hand[2]) {
+          document.getElementById("dealerCardThree").src = cardImageDict[dealer.hand[2].image];
+          document.getElementById("dealerCardThree").style.display = "inline";
+        } else {
+          document.getElementById("dealerCardThree").style.display = "none";
+        }
+        if (dealer.hand[3]) {
+          document.getElementById("dealerCardFour").src = cardImageDict[dealer.hand[3].image];
+          document.getElementById("dealerCardFour").style.display = "inline";
+        } else {
+          document.getElementById("dealerCardFour").style.display = "none";
+        }
+        if (dealer.hand[4]) {
+          document.getElementById("dealerCardFive").src = cardImageDict[dealer.hand[4].image];
+          document.getElementById("dealerCardFive").style.display = "inline";
+        } else {
+          document.getElementById("dealerCardFive").style.display = "none";
+        }
+        if (dealer.hand[5]) {
+          document.getElementById("dealerCardSix").src = cardImageDict[dealer.hand[5].image];
+          document.getElementById("dealerCardSix").style.display = "inline";
+        } else {
+          document.getElementById("dealerCardSix").style.display = "none";
+        }
+      }
+
+      function ContinueHit() {
+        if (playerOne.score > 21) {
+          document.getElementById("hitButton").disabled = true;
+          document.getElementById("standButton").disabled = true;
+          document.getElementById("playerOneResults").innerHTML = "You Busted!";
+          RoundResult();
+        }
+      }
+
+      function Stand() {
+        document.getElementById("hitButton").disabled = true;
+        document.getElementById("standButton").disabled = true;
+        document.getElementById("playerOneResults").style.display = "inline";
+        document.getElementById("playerOneResults").innerHTML = "You stand on " + playerOne.score;
+        document.getElementById("dealerStatsArea").style.display = "block";
+        document.getElementById("startDealerTurn").style.visibility = "visible";
+        document.getElementById("dealerResults").innerHTML = "";
+      }
+
+      function DealerHit() {
+        document.getElementById("startDealerTurn").style.visibility = "hidden";
+        document.getElementById("dealerCardArea").style.display = "block";
+        Score();
+        while (dealer.score < 16) {
+          dealer.hand.push(deck[currentIndex]);
+          currentIndex++;
+          Score();
+        }
+        LoadAll();
+        if (dealer.score <= 21) {
+          document.getElementById("dealerResults").innerHTML = "Dealer stands on " + dealer.score;
+        } else {
+          document.getElementById("dealerResults").innerHTML = "Dealer busts!";
+        }
+        RoundResult();
+
+      }
+
+      function RoundResult() {
+        document.getElementById("roundResultArea").style.display = "inline";
+        if (playerOne.score > 21) {
+          document.getElementById("roundResultAreaP").innerHTML = "You lose!";
+          playerOne.money--;
+        } else if (playerOne.score <= 21 && playerOne.score == dealer.score) {
+          document.getElementById("roundResultAreaP").innerHTML = "Draw!";
+        } else if (dealer.score > 21 && playerOne.score <= 21) {
+          document.getElementById("roundResultAreaP").innerHTML = "You win!";
+          playerOne.money++;
+        } else if (playerOne.score > dealer.score && playerOne.score <= 21 && dealer.score <= 21) {
+          document.getElementById("roundResultAreaP").innerHTML = "You win!";
+          playerOne.money++;
+        } else {
+          document.getElementById("roundResultAreaP").innerHTML = "You lose!";
+          playerOne.money--;
+        }
+        document.getElementById("playAgainButton").style.display = "block";
+        document.getElementById("playerOneMoney").innerHTML = "$" + playerOne.money;
+        document.getElementById("newGameButton").style.display = "block";
+      }
+
+      var playerOneName;
+
+      function Greeting() {
+			
+        playerOneName = document.getElementById("playerName").value;
+				if(playerOneName){
+				document.getElementById("startAreaTwoP").innerHTML = "Welcome " + playerOneName + ". Are you ready to play?";
+        document.getElementById("startAreaOne").style.display = "none";
+        document.getElementById("startAreaTwo").style.display = "inline";
+				}
+        else{
+				alert("Name can not be blank");
+				}
+      }
+
+      function ShowPlayerOne() {
+        document.getElementById("startAreaTwo").style.display = "none";
+        document.getElementById("playerOneStatsArea").style.display = "inline";
+        document.getElementById("playerOneName").innerHTML = playerOneName + ": ";
+        document.getElementById("playerOneMoney").innerHTML = "$" + playerOne.money;
+        document.getElementById("playerOneCardArea").style.display = "block";
+        document.getElementById("hitButton").disabled = false;
+        document.getElementById("standButton").disabled = false;
+      }
+
+      function PlayAgain() {
+        document.getElementById("startDealerTurn").style.visibility = "hidden";
+        document.getElementById("dealerStatsArea").style.display = "none";
+        document.getElementById("dealerCardArea").style.display = "none";
+        document.getElementById("roundResultArea").style.display = "none";
+        document.getElementById("playAgainButton").style.display = "none";
+        playerOne.hand = [];
+        dealer.hand = [];
+        currentIndex = 0;
+
+        Shuffle();
+        Deal();
+        LoadAll();
+
+        document.getElementById("hitButton").disabled = false;
+        document.getElementById("standButton").disabled = false;
+        document.getElementById("playerOneResults").innerHTML = "";
+        document.getElementById("newGameButton").style.display = "none";
+      }
+
+      function NewGame() {
+        document.getElementById("startAreaOne").style.display = "block";
+        document.getElementById("newGameButton").style.display = "none";
+
+        document.getElementById("startDealerTurn").style.visibility = "hidden";
+        document.getElementById("dealerStatsArea").style.display = "none";
+        document.getElementById("dealerCardArea").style.display = "none";
+        document.getElementById("roundResultArea").style.display = "none";
+        document.getElementById("playAgainButton").style.display = "none";
+
+        document.getElementById("playerOneStatsArea").style.display = "none";
+        document.getElementById("playerOneCardArea").style.display = "none";
+        document.getElementById("playerOneResults").innerHTML = "";
+        document.getElementById("playerName").value = "";
+
+        playerOne.hand = [];
+        dealer.hand = [];
+        currentIndex = 0;
+        playerOne.money = 10;
+
+        Shuffle();
+        Deal();
+        LoadAll();
+
+      }
+
+      document.getElementById("submitButton").addEventListener("click", Greeting);
+
+      document.getElementById("playButton").addEventListener("click", ShowPlayerOne);
+
+      document.getElementById("hitButton").addEventListener("click", Hit);
+      document.getElementById("hitButton").addEventListener("click", LoadAll);
+      document.getElementById("hitButton").addEventListener("click", Score);
+      document.getElementById("hitButton").addEventListener("click", ContinueHit);
+
+      document.getElementById("standButton").addEventListener("click", Score);
+      document.getElementById("standButton").addEventListener("click", Stand);
+
+      document.getElementById("startDealerTurn").addEventListener("click", DealerHit);
+
+      document.getElementById("playAgainButton").addEventListener("click", PlayAgain);
+
+      document.getElementById("newGameButton").addEventListener("click", NewGame);
+
+    </script>
+  </body>
+
+</document>
